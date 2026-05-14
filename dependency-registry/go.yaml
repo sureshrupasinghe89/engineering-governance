@@ -217,6 +217,12 @@ dependencies:
         allowed_scopes:
           - "*"
 
+  - module: github.com/spf13/pflag
+    versions:
+      - version: ">=v1.0.9"
+        allowed_scopes:
+          - "*"
+
   - module: github.com/go-git/go-git/v5
     versions:
       - version: ">=v5.16.5"
