@@ -124,8 +124,6 @@ runs:
         echo "Using fossa-cli ${fossa_cli_version}"
         curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash -s -- "${fossa_cli_version}"
 
-        fossa --help
-
         analyze_args=(
           analyze
           --fossa-api-key "${INPUT_API_KEY}"
@@ -148,10 +146,18 @@ runs:
         echo "Running FOSSA scan..."
         cd "${GITHUB_WORKSPACE}/${working_directory}"
 
+        set +e
         analyze_output="$(
           fossa "${analyze_args[@]}" 2>&1
         )"
+        analyze_status=$?
+        set -e
         echo "${analyze_output}"
+
+        if (( analyze_status != 0 )); then
+          echo "fossa analyze failed with exit code ${analyze_status}."
+          exit "${analyze_status}"
+        fi
 
         revision="$(
           printf '%s\n' "${analyze_output}" |
@@ -186,7 +192,18 @@ runs:
             test_args+=(--debug)
           fi
 
-          fossa "${test_args[@]}"
+          set +e
+          test_output="$(
+            fossa "${test_args[@]}" 2>&1
+          )"
+          test_status=$?
+          set -e
+          echo "${test_output}"
+
+          if (( test_status != 0 )); then
+            echo "fossa test failed with exit code ${test_status}."
+            exit "${test_status}"
+          fi
         fi
 
         if [[ -n "${generate_report}" ]]; then
@@ -202,9 +219,18 @@ runs:
             report_args+=(--debug)
           fi
 
+          set +e
           report_output="$(
-            fossa "${report_args[@]}"
+            fossa "${report_args[@]}" 2>&1
           )"
+          report_status=$?
+          set -e
+
+          if (( report_status != 0 )); then
+            echo "${report_output}"
+            echo "fossa report attribution failed with exit code ${report_status}."
+            exit "${report_status}"
+          fi
 
           echo "report<<EOF" >> "${GITHUB_OUTPUT}"
           printf '%s\n' "${report_output}" >> "${GITHUB_OUTPUT}"
