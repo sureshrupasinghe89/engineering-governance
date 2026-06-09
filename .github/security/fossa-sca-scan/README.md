@@ -125,7 +125,6 @@ jobs:
 - `project`: Optional. Project name passed to FOSSA CLI.
 - `endpoint`: Optional. FOSSA endpoint hostname or URL. Default: `app.fossa.com`.
 - `debug`: Optional. Runs FOSSA commands in debug mode when set to `"true"`. Default: `"false"`.
-- `pinned-cli-version`: Optional. Pins the installed FOSSA CLI version, for example `v3.7.1`. If omitted, the latest version is installed.
 - `working-directory`: Optional. Directory to scan. Default: `.`.
 - `fail-on-vulnerabilities`: Optional. Enables the extra FOSSA issues API gate for active `high` and `critical` vulnerabilities. Default: `"false"`.
 - `repo-name`: Optional. Repository name used by the vulnerability API gate. Defaults to the current repository name.
@@ -141,4 +140,5 @@ jobs:
 ## Notes
 
 - The vulnerability gate is a WSO2-specific extension on top of the standard FOSSA analyze/test flow.
+- The action currently installs a repo-managed FOSSA CLI version: `v3.17.10`. Update the action itself when you want to roll forward the CLI version across consumers.
 - The examples above still use `@main` for readability. For production use, pin to a release tag or commit SHA.

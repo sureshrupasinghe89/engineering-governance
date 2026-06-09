@@ -33,10 +33,6 @@ inputs:
     description: Whether to run FOSSA commands in debug mode.
     required: false
     default: "false"
-  pinned-cli-version:
-    description: Pinned FOSSA CLI version, for example `v3.7.1`. If unset, the action installs the latest version.
-    required: false
-    default: ""
   working-directory:
     description: Directory that contains the project to analyze.
     required: false
@@ -84,7 +80,6 @@ runs:
         INPUT_PROJECT: ${{ inputs.project }}
         INPUT_ENDPOINT: ${{ inputs.endpoint }}
         INPUT_DEBUG: ${{ inputs.debug }}
-        INPUT_PINNED_CLI_VERSION: ${{ inputs.pinned-cli-version }}
         INPUT_WORKING_DIRECTORY: ${{ inputs.working-directory }}
         INPUT_FAIL_ON_VULNERABILITIES: ${{ inputs.fail-on-vulnerabilities }}
         INPUT_REPO_NAME: ${{ inputs.repo-name }}
@@ -100,12 +95,12 @@ runs:
         project="${INPUT_PROJECT:-}"
         endpoint="${INPUT_ENDPOINT:-app.fossa.com}"
         debug="${INPUT_DEBUG:-false}"
-        pinned_cli_version="${INPUT_PINNED_CLI_VERSION:-}"
         working_directory="${INPUT_WORKING_DIRECTORY:-.}"
         fail_on_vulnerabilities="${INPUT_FAIL_ON_VULNERABILITIES:-false}"
         repo_name="${INPUT_REPO_NAME:-}"
         github_org="${INPUT_GITHUB_ORG:-}"
         scope_id_prefix="${INPUT_SCOPE_ID_PREFIX:-}"
+        fossa_cli_version="v3.17.10"
 
         if [[ -z "${branch}" ]]; then
           branch="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-}}"
@@ -126,12 +121,8 @@ runs:
         fi
 
         echo "Installing fossa-cli..."
-        # Install the latest CLI by default, or the pinned version when provided.
-        if [[ -n "${pinned_cli_version}" ]]; then
-          curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash -s -- "${pinned_cli_version}"
-        else
-          curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
-        fi
+        echo "Using fossa-cli ${fossa_cli_version}"
+        curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash -s -- "${fossa_cli_version}"
 
         fossa --help
 
