@@ -26,9 +26,9 @@ inputs:
     required: false
     default: ""
   endpoint:
-    description: FOSSA endpoint. Defaults to `app.fossa.com`.
+    description: FOSSA endpoint URL. Defaults to `https://app.fossa.com`.
     required: false
-    default: "app.fossa.com"
+    default: "https://app.fossa.com"
   debug:
     description: Whether to run FOSSA commands in debug mode.
     required: false
@@ -93,7 +93,7 @@ runs:
         test_diff_revision="${INPUT_TEST_DIFF_REVISION:-}"
         branch="${INPUT_BRANCH:-}"
         project="${INPUT_PROJECT:-}"
-        endpoint="${INPUT_ENDPOINT:-app.fossa.com}"
+        endpoint="${INPUT_ENDPOINT:-https://app.fossa.com}"
         debug="${INPUT_DEBUG:-false}"
         working_directory="${INPUT_WORKING_DIRECTORY:-.}"
         fail_on_vulnerabilities="${INPUT_FAIL_ON_VULNERABILITIES:-false}"

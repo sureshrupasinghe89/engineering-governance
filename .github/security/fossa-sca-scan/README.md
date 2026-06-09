@@ -123,7 +123,7 @@ jobs:
 - `test-diff-revision`: Optional. Passed to `fossa test --diff`. Effective only when `run-tests` is enabled.
 - `branch`: Optional. Branch passed to FOSSA CLI. Defaults to the current GitHub ref.
 - `project`: Optional. Project name passed to FOSSA CLI.
-- `endpoint`: Optional. FOSSA endpoint hostname or URL. Default: `app.fossa.com`.
+- `endpoint`: Optional. FOSSA endpoint URL. Default: `https://app.fossa.com`.
 - `debug`: Optional. Runs FOSSA commands in debug mode when set to `"true"`. Default: `"false"`.
 - `working-directory`: Optional. Directory to scan. Default: `.`.
 - `fail-on-vulnerabilities`: Optional. Enables the extra FOSSA issues API gate for active `high` and `critical` vulnerabilities. Default: `"false"`.
