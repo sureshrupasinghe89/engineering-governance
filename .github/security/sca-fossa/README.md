@@ -1,4 +1,4 @@
-# FOSSA SCA Scan Action
+# SCA FOSSA Action
 
 Run FOSSA scans from GitHub Actions with support for:
 
@@ -12,7 +12,7 @@ Run FOSSA scans from GitHub Actions with support for:
 ## Prerequisites
 
 - A FOSSA API key stored as a GitHub secret such as `FOSSA_API_KEY`
-- A Linux or macOS runner with network access to your FOSSA endpoint
+- A Linux runner with network access to your FOSSA endpoint
 - For the optional vulnerability gate, a FOSSA project scope convention that can be resolved from `scope-id-prefix`, `github-org`, and `repo-name`
 
 ## Usage
@@ -150,7 +150,7 @@ For most repositories, use a single workflow and declare scan targets with a mat
 - Keep one GitHub workflow for FOSSA scanning in the product repository.
 - Define one matrix entry per independently scanable component.
 - Pass both `working-directory` and `project` for each component.
-- Use a stable project naming convention such as `repo/path` so each component is tracked as a separate FOSSA project.
+- Use a stable project naming convention such as `owner/repo/path` so each component is tracked as a separate FOSSA project.
 - Run all components on `main`, and optionally allow manual selection with `workflow_dispatch`.
 - If the repository should be scanned as a single unit, do not pass `working-directory`; the action will scan the entire repository.
 
@@ -177,7 +177,7 @@ jobs:
         with:
           api-key: ${{ secrets.FOSSA_API_KEY }}
           working-directory: ${{ matrix.app.path }}
-          project: ${{ format('{0}/{1}', github.event.repository.name, matrix.app.path) }}
+          project: ${{ format('{0}/{1}', github.repository, matrix.app.path) }}
 ```
 
 ### Example with manual target selection and path-based PR or push scans
@@ -261,7 +261,7 @@ jobs:
         with:
           api-key: ${{ secrets.FOSSA_API_KEY }}
           working-directory: ${{ matrix.app.path }}
-          project: ${{ format('{0}/{1}', github.event.repository.name, matrix.app.path) }}
+          project: ${{ format('{0}/{1}', github.repository, matrix.app.path) }}
           run-tests: ${{ github.event_name == 'pull_request' }}
           test-diff-revision: ${{ github.event.pull_request.base.sha }}
 ```
@@ -290,5 +290,4 @@ If those differences do not exist, one workflow with a matrix is the recommended
 ## Notes
 
 - The vulnerability gate is a WSO2-specific extension on top of the standard FOSSA analyze/test flow.
-- The action currently installs a repo-managed FOSSA CLI version: `v3.17.10`. Update the action itself when you want to roll forward the CLI version across consumers.
-- The examples above still use `@main` for readability. For production use, pin to a release tag or commit SHA.
+- The action currently installs a repo-managed FOSSA CLI version: `v3.17.10`. Update the action itself when there is a new latest stable version is available.
